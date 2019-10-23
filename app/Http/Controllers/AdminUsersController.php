@@ -7,6 +7,7 @@ use App\Http\Requests\UsersRequest;
 use App\Photo;
 use App\Role;
 use App\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -48,7 +49,7 @@ class AdminUsersController extends Controller
         } else {
             $input = $request->all();
 
-            $input['password'] = bycrpt($request->password);
+            $input['password']=$request->password;
         }
 
         if($file = $request->file('photo_id')) {
@@ -87,7 +88,7 @@ class AdminUsersController extends Controller
     {
         $user=User::findOrFail($id);
 
-        $roles=Role::list('name', 'id')->all();
+        $roles=Role::pluck('name', 'id')->all();
 
         return view('admin.users.edit', compact('user', 'roles'));
     }
@@ -108,7 +109,7 @@ class AdminUsersController extends Controller
         } else {
             $input = $request->all();
 
-            $input['password'] = bycrpt($request->password);
+            $input['password']=$request->password;
         }
 
         if($file = $request->file('photo_id')) {
@@ -133,8 +134,16 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id) {
+
+        $user = User::findOrFail($id);
+
+        unlink(public_path() . "/images/" .  $user->photo->file);
+
+        $user->delete();
+
+        //Session::flash('deleted_user', 'The user has been deleted');
+
+        return redirect('/admin/users');
     }
 }
