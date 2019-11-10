@@ -11,7 +11,7 @@
 
     <div class="col-sm-3">
 
-        <img height="50" src="../../public/images/{{$user->photo ? $user->photo->file : 'https://placehold.it/400x400'}}" alt="" class="img-responsive img-rounded">
+        <img height="50" src="../../../../public/images/{{$user->photo ? $user->photo->file : 'https://placehold.it/400x400'}}" alt="" class="img-responsive img-rounded">
 
     </div>
 
